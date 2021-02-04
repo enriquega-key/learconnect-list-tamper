@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         LearConnect RDP list Tamper
 // @namespace    http://keyland.es/
-// @version      0.2.0
+// @version      0.2.1
 // @description  Remove or correct items in RDP server list
 // @author       Enrique Gómez
 // @match        https://learconnect.lear.com/dana/home/index.cgi
