@@ -5,6 +5,8 @@
 // @description  Remove or correct items in RDP server list
 // @author       Enrique Gómez
 // @match        https://learconnect.lear.com/dana/home/index.cgi
+// @downloadURL  https://github.com/enriquega-key/learconnect-list-tamper/raw/main/LearConnect%20RDP%20list%20Tamper.user.js
+// @updateURL    https://github.com/enriquega-key/learconnect-list-tamper/raw/main/LearConnect%20RDP%20list%20Tamper.user.js
 // @grant        none
 // ==/UserScript==
 
