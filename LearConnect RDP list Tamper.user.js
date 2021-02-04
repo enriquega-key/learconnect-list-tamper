@@ -116,6 +116,9 @@
                 let img = '<img src="' + flag + '" alt="' + text.substring(0, 2) + '" style="display: inline-block; width:22px; height:16px; object-fit:cover; vertical-align: middle; margin: 0 4px 0 0;" />';
                 item.parentElement.insertAdjacentHTML('beforebegin', img);
             }
+            else {
+                console.log("---did not found flag for item: " + text);
+            }
         }
     }
 })();
