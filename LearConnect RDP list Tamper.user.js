@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         LearConnect RDP list Tamper
 // @namespace    http://keyland.es/
-// @version      0.3.0
+// @version      0.3.1
 // @description  Remove or correct items in RDP server list
 // @author       Enrique Gómez
 // @match        https://learconnect.lear.com/dana/home/index.cgi
@@ -112,7 +112,7 @@
                 item.parentElement.insertAdjacentHTML('afterend', ' <span class="tampernote">' + notes[text] + '</span>');
 
 				parentContainer.classList.add("processed");
-				parentContainer.classList.add("added-note");
+				parentContainer.classList.add("tampernote");
             }
             if (Object.keys(ipsToTranslate).includes(text)) {
                 console.log("---found item to translate: " + text + " -> " + ipsToTranslate[text]);
@@ -121,7 +121,7 @@
                 text = ipsToTranslate[text];
 
 				parentContainer.classList.add("processed");
-				parentContainer.classList.add("translated");
+				parentContainer.classList.add("tampertranslated");
             }
             let flag = "";
             switch (text.substring(0, 2)) {
