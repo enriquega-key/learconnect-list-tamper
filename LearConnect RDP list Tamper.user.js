@@ -60,7 +60,7 @@
 	/* Create style document */
 	let css = document.createElement('style');
 	css.type = 'text/css';
-	let styles = ".tamperhidden{display: none;} .tamperhidden.show{display:table;opacity:0.5} .tampernote{} .tamperflag{display: inline-block; width:22px; height:16px; object-fit:cover; vertical-align: middle; margin: 0 4px 0 0;} #tampertogglehide{position:absolute;top:80px;right:50px;width:60px;font-weight:bolder;}";
+	let styles = ".tamperhidden{display: none;} .tamperhidden.show{display:table;opacity:0.5} .tampernote{} .tamperflag{display: inline-block; width:22px; height:16px; object-fit:cover; vertical-align: middle; margin: 0 4px 0 0;} #tampertogglehide{position:absolute;top:120px;right:25px;width:100px;font-weight:bolder;}";
 	if (css.styleSheet) {
 		css.styleSheet.cssText = styles;
 	} else {
