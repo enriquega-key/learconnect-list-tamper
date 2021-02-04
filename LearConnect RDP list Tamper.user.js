@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         LearConnect RDP list Tamper
 // @namespace    http://keyland.es/
-// @version      0.2.1
+// @version      0.3.0
 // @description  Remove or correct items in RDP server list
 // @author       Enrique Gómez
 // @match        https://learconnect.lear.com/dana/home/index.cgi
@@ -57,28 +57,71 @@
         "CZ": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAAAXNSR0IArs4c6QAAAAZiS0dEAP8A/wD/oL2nkwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB9gMDxIHL1QYFTUAAAAZdEVYdENvbW1lbnQAQ3JlYXRlZCB3aXRoIEdJTVBXgQ4XAAACK0lEQVQ4y+2VPWtUQRSGn3Nmsh/ZRCQRxJ8gpLKzslSEIJL4CywEBREVsVALK5sgVkowIjaKYGGZhNhKAmqEKBq3UhNC3Gy8m4/d5O6dY3HvbkzlR1LmwDDDmTnvvDzMB+xFFjJy/15frljaF602bLc0oyiqcfL80NT0l3nbzSiXy1O6FK2F/iuPuDk8ys+VOgBmOzYf1DtHIdfBs/Fpjl14wNtP3xGRHfNQFXBOcKo0GjGnrj3m1vAoS9HaDoU1FXUqeKd0FfM8n3jP8UsPGZuc/W80qipIJq4qOKd4VeqNmHN3XnB7ZJxKtP7PG6iK4FVQFTQTV6eoCF3FHE/H3jFw/QkvJ8t/zV5LJXxLsOXITDAMVAjBUNeBLS+zcPEy5fkPJC3xELC0aFsTM+YOHcSrpHy3rUHAjNh7+pc+M7g4Q+/mOsmBXpxZisRAAIKlRswg6113N14EnNMsZ1jmvNBscnXuNUdr32giJN63HQlgIWT3LOOezRECOMX/qNaobm5Q6szTWciT5PKcqMwyuDhDz+YqTefTAgOj5da2eEtoC1uWF3H4+kZMtRZTjVYpJjFDX19xxFagVGKjUERzCiIgLXPpoM1XZBtfwUDBm0BTHAOVj5xdeMP+uMG6CNRqZNWI94gq4hyiAqIIkkHecosZJAl1DN8T1/XG7ASH6xUAEtV0/e9HywxLEixJ/vy0mWEhUbl75nSf97l9Ky63K8+mgKyFUNv7kdrxC84oYdkgu8rXAAAAAElFTkSuQmCC",
     };
 
+	/* Create style document */
+	let css = document.createElement('style');
+	css.type = 'text/css';
+	let styles = ".tamperhidden{display: none;} .tamperhidden.show{display:table;opacity:0.5} .tampernote{} .tamperflag{display: inline-block; width:22px; height:16px; object-fit:cover; vertical-align: middle; margin: 0 4px 0 0;} #tampertogglehide{position:absolute;top:80px;right:50px;width:60px;font-weight:bolder;}";
+	if (css.styleSheet) {
+		css.styleSheet.cssText = styles;
+	} else {
+		css.appendChild(document.createTextNode(styles));
+	}
+	/* Append style to the tag name */
+	document.getElementsByTagName("head")[0].appendChild(css);
+
+	let toggleHide = document.createElement('div')
+	toggleHide.id = "tampertogglehide";
+	toggleHide.innerHTML = '<a href="#">Toggle Hide</a>';
+	document.getElementsByTagName("body")[0].appendChild(toggleHide);
+
+	let toggler = document.querySelectorAll("#tampertogglehide a")[0];
+	toggler.addEventListener("click", function () {
+		let unhidden = document.querySelectorAll(".processed.tamperhidden.show");
+		if (unhidden.length > 0) {
+			for (let item of unhidden) {
+				item.classList.remove('show');
+			}
+		}
+		else {
+			let hidden = document.querySelectorAll(".processed.tamperhidden");
+			for (let item of hidden) {
+				item.classList.add('show');
+			}
+		}
+	});
+
     let rdpNamesList = document.querySelectorAll("#layerPanelTermSvcs #table_termsessionline_2 a b");
     for (let item of rdpNamesList) {
         let text = item.textContent;
+            let parentContainer = item.closest("#table_termsessionline_1");
         if (ipsNamesToRemove.includes(text)) {
             console.log("---found item to remove: " + text);
-            let parentContainer = item.closest("#table_termsessionline_1");
             if (parentContainer.nextElementSibling) {
                 //parentContainer.nextElementSibling.remove();
-                parentContainer.nextElementSibling.style = "display: none;"
+                //parentContainer.nextElementSibling.style = "display: none;";
+				parentContainer.nextElementSibling.classList.add("processed");
+				parentContainer.nextElementSibling.classList.add("tamperhidden");
             }
             //parentContainer.remove();
-            parentContainer.style = "display: none;"
+            //parentContainer.style = "display: none;"
+			parentContainer.classList.add("processed");
+			parentContainer.classList.add("tamperhidden");
         } else {
             if (Object.keys(notes).includes(text)) {
                 console.log("---found item to add note: " + text + " -> " + notes[text]);
-                item.parentElement.insertAdjacentHTML('afterend', ' <span class="note">' + notes[text] + '</span>');
+                item.parentElement.insertAdjacentHTML('afterend', ' <span class="tampernote">' + notes[text] + '</span>');
+
+				parentContainer.classList.add("processed");
+				parentContainer.classList.add("added-note");
             }
             if (Object.keys(ipsToTranslate).includes(text)) {
                 console.log("---found item to translate: " + text + " -> " + ipsToTranslate[text]);
                 item.setAttribute("title", "Texto original: '" + text + "'");
                 item.textContent = "*" + ipsToTranslate[text] + "*";
                 text = ipsToTranslate[text];
+
+				parentContainer.classList.add("processed");
+				parentContainer.classList.add("translated");
             }
             let flag = "";
             switch (text.substring(0, 2)) {
@@ -115,8 +158,9 @@
                     break;
             }
             if (flag != "") {
-                let img = '<img src="' + flag + '" alt="' + text.substring(0, 2) + '" style="display: inline-block; width:22px; height:16px; object-fit:cover; vertical-align: middle; margin: 0 4px 0 0;" />';
+                let img = '<img src="' + flag + '" alt="' + text.substring(0, 2) + '" class="tamperflag" />';
                 item.parentElement.insertAdjacentHTML('beforebegin', img);
+				parentContainer.classList.add("added-flag");
             }
             else {
                 console.log("---did not found flag for item: " + text);
