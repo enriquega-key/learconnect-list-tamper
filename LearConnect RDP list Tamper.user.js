@@ -26,7 +26,7 @@
                              "10.48.192.38",
                              "10.48.192.36",
                              "ALVVMBLD02", //obsoleto -> ESVIT-BLD01
-							 "10.48.202.60",  //Ip temporal de Martorell durante la migración de 2020
+							 "10.48.202.60", //Ip temporal de Martorell durante la migración de 2020
                            ];
     let ipsToTranslate = { //"10.48.42.25": "ARDVMBLD01",
                            //"10.48.202.60": "ESBRL-BLD01",
