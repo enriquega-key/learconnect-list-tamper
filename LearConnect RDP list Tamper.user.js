@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         LearConnect RDP list Tamper
 // @namespace    http://keyland.es/
-// @version      0.3.1
+// @version      0.4.1
 // @description  Remove or correct items in RDP server list
 // @author       Enrique Gómez
 // @match        https://learconnect.lear.com/dana/home/index.cgi
@@ -26,6 +26,7 @@
                              "10.48.192.38",
                              "10.48.192.36",
                              "ALVVMBLD02", //obsoleto -> ESVIT-BLD01
+							 "10.48.202.60",  //Ip temporal de Martorell durante la migración de 2020
                            ];
     let ipsToTranslate = { //"10.48.42.25": "ARDVMBLD01",
                            //"10.48.202.60": "ESBRL-BLD01",
@@ -46,6 +47,7 @@
                   //"ESBRL-BLD01": "(SAD/Martorell Servicios BLADE)",
                   //"ESBRL-SQL02": "(SAD/Martorell SQL Server BLADE)",
                   "10.48.202.60": "ESBRL-BLD01. IP antigua. NO USAR",
+				  "10.48.184.34": "ARDASA antiguo. Antes de migración de servidor."
                 };
 
     let countryFlags = {
@@ -106,65 +108,65 @@
             //parentContainer.style = "display: none;"
 			parentContainer.classList.add("processed");
 			parentContainer.classList.add("tamperhidden");
-        } else {
-            if (Object.keys(notes).includes(text)) {
-                console.log("---found item to add note: " + text + " -> " + notes[text]);
-                item.parentElement.insertAdjacentHTML('afterend', ' <span class="tampernote">' + notes[text] + '</span>');
+        } //else {
+		if (Object.keys(notes).includes(text)) {
+			console.log("---found item to add note: " + text + " -> " + notes[text]);
+			item.parentElement.insertAdjacentHTML('afterend', ' <span class="tampernote">' + notes[text] + '</span>');
 
-				parentContainer.classList.add("processed");
-				parentContainer.classList.add("tampernote");
-            }
-            if (Object.keys(ipsToTranslate).includes(text)) {
-                console.log("---found item to translate: " + text + " -> " + ipsToTranslate[text]);
-                item.setAttribute("title", "Texto original: '" + text + "'");
-                item.textContent = "*" + ipsToTranslate[text] + "*";
-                text = ipsToTranslate[text];
+			parentContainer.classList.add("processed");
+			parentContainer.classList.add("tampernote");
+		}
+		if (Object.keys(ipsToTranslate).includes(text)) {
+			console.log("---found item to translate: " + text + " -> " + ipsToTranslate[text]);
+			item.setAttribute("title", "Texto original: '" + text + "'");
+			item.textContent = "*" + ipsToTranslate[text] + "*";
+			text = ipsToTranslate[text];
 
-				parentContainer.classList.add("processed");
-				parentContainer.classList.add("tampertranslated");
-            }
-            let flag = "";
-            switch (text.substring(0, 2)) {
-                case "ES":
-                    flag = countryFlags.ES;
-                    break;
-                case "FR":
-                    flag = countryFlags.FR;
-                    break;
-                case "PL":
-                    flag = countryFlags.PL;
-                    break;
-                case "PT":
-                    flag = countryFlags.PT;
-                    break;
-                case "SK":
-                    flag = countryFlags.SK;
-                    break;
-                default:
-                    switch (text.substring(0, 3)) {
-                        case "ACR":
-                            flag = countryFlags.CZ;
-                            break;
-                        case "ARD":
-                            flag = countryFlags.ES;
-                            break;
-                        case "LOI":
-                            flag = countryFlags.FR;
-                            break;
-                        case "VAL":
-                            flag = countryFlags.PT;
-                            break;
-                    }
-                    break;
-            }
-            if (flag != "") {
-                let img = '<img src="' + flag + '" alt="' + text.substring(0, 2) + '" class="tamperflag" />';
-                item.parentElement.insertAdjacentHTML('beforebegin', img);
-				parentContainer.classList.add("added-flag");
-            }
-            else {
-                console.log("---did not found flag for item: " + text);
-            }
-        }
+			parentContainer.classList.add("processed");
+			parentContainer.classList.add("tampertranslated");
+		}
+		let flag = "";
+		switch (text.substring(0, 2)) {
+			case "ES":
+				flag = countryFlags.ES;
+				break;
+			case "FR":
+				flag = countryFlags.FR;
+				break;
+			case "PL":
+				flag = countryFlags.PL;
+				break;
+			case "PT":
+				flag = countryFlags.PT;
+				break;
+			case "SK":
+				flag = countryFlags.SK;
+				break;
+			default:
+				switch (text.substring(0, 3)) {
+					case "ACR":
+						flag = countryFlags.CZ;
+						break;
+					case "ARD":
+						flag = countryFlags.ES;
+						break;
+					case "LOI":
+						flag = countryFlags.FR;
+						break;
+					case "VAL":
+						flag = countryFlags.PT;
+						break;
+				}
+				break;
+		}
+		if (flag != "") {
+			let img = '<img src="' + flag + '" alt="' + text.substring(0, 2) + '" class="tamperflag" />';
+			item.parentElement.insertAdjacentHTML('beforebegin', img);
+			parentContainer.classList.add("added-flag");
+		}
+		else {
+			console.log("---did not found flag for item: " + text);
+		}
+        //}
     }
 })();
